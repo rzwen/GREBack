@@ -1,0 +1,101 @@
+<body>
+<h2>Search for existed result</h2>
+<input type="email" id="search" name="search">
+<button onclick="search()">Search</button>
+<div id="searchResult"><a target="_blank" href="http://localhost:3000/lookup?email=''">Click Here for Results</a></p></div>
+
+<!-- remember to change this action to an appropriate URL! -->
+<p><a href="http://localhost:3000/signup" >Sign up</a>
+<h2>New Test</h2>
+<form action="http://localhost:3000/uploads" method="post">
+
+<label for="uploaderEmail">Email</label>
+<input type="email" id="uploaderEmail" name="uploaderEmail">
+<br>
+
+<label for="password">Password</label>
+<input type="password" id="password" name="password">
+<br>
+
+<label for="uploadedIndex">Index Name</label>
+<input type="text" id="uploadedIndex" name="uploadedIndex">
+<br>
+
+<label for="IndexFileName">Index File Name</label>
+<input type="text" id="IndexFileName" name="IndexFileName">
+<br>
+
+<label for="indexFile">Index File</label>
+<input type="File" id="indexFile" name="indexFile">
+<br>
+
+<label for="uploadedCompeditor">Compeditor File Name</label>
+<input type="text" id="uploadedCompeditor" name="uploadedCompeditor" value="Compeditor.h">
+<br>
+
+<label for="comFile">Compeditor File</label>
+<input type="File" id="comFile" name="comFile">
+<br>
+<input type="submit" id="submitFile" value="Submit">
+<div id="result"></div>
+</form>
+
+
+
+<script>
+    function search(){
+        var email = document.getElementById("search").value;
+        document.getElementById("searchResult").innerHTML = '<a target="_blank" href="http://localhost:3000/lookup?email='+email+'">Check Here For Result</a>';
+    }
+    //transforming files to backend
+    const form = document.querySelector('form');
+    form.addEventListener('submit', (e) => {
+        
+        e.preventDefault();
+        // Prevents HTML handling submission
+        const email = document.getElementById("uploaderEmail");
+        const password = document.getElementById("password");
+        const index = document.getElementById("uploadedIndex");
+        const IndexFileName = document.getElementById("IndexFileName");
+        const com = document.getElementById("uploadedCompeditor");
+        const indexFile = document.getElementById("indexFile");
+        const comFile = document.getElementById("comFile");
+        const formData = new FormData();
+        // Creates empty formData object
+        formData.append("uploaderEmail", email.value);
+        formData.append("password",password.value);
+        formData.append("uploadedIndex", index.value);
+        formData.append("IndexFileName", IndexFileName.value);
+        formData.append("uploadedCompeditor", com.value);
+        // Appends value of text input
+        formData.append("files", indexFile.files[0]);
+        formData.append("files", comFile.files[0]);
+
+        // Appends value(s) of file input
+        // Post data to Node and Express server:
+        fetch('http://localhost:3000/uploads', {
+            method: 'POST',
+            body: formData, // Payload is formData object
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log(data.status);
+            
+            if(data.status=="Wrong User"){
+                document.getElementById("result").innerHTML='<br> Wrong User ! <br> Please Try again or Sign up'
+            }else if(data.status=="Wrong File"){
+                document.getElementById("result").innerHTML='<br> Wrong File ! <br> Please Try again and check whether the file names match'
+            }else if(data.status=="Wrong Time"){
+                document.getElementById("result").innerHTML='<br> Please Send After 1 min'
+            }else if(data.status=="Wrong Password"){
+                document.getElementById("result").innerHTML='<br> Wrong Password ! <br> Please Try again'
+            }
+            else{
+                document.getElementById("submitFile").remove();
+                document.getElementById("result").innerHTML='<br> Submitted ! <br> See result at: <br><a href="http://localhost:3000/lookup?email='+email.value+'"" >Result</a>'
+            }
+        });
+    })
+</script>
+
+</body>

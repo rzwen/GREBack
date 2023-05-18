@@ -2,12 +2,12 @@
 <h2>Search for existed result</h2>
 <input type="email" id="search" name="search">
 <button onclick="search()">Search</button>
-<div id="searchResult"><a target="_blank" href="http://localhost:3000/lookup?email=''">Click Here for Results</a></p></div>
+<div id="searchResult"><a target="_blank" href="http://54.206.175.145:3000/lookup?email=''">Click Here for Results</a></p></div>
 
 <!-- remember to change this action to an appropriate URL! -->
-<p><a href="http://localhost:3000/signup" >Sign up</a>
+<p><a href="http://54.206.175.145:3000/signup" >Sign up</a>
 <h2>New Test</h2>
-<form action="http://localhost:3000/uploads" method="post">
+<form action="http://54.206.175.145:3000/uploads" method="post">
 
 <label for="uploaderEmail">Email</label>
 <input type="email" id="uploaderEmail" name="uploaderEmail">
@@ -45,7 +45,7 @@
 <script>
     function search(){
         var email = document.getElementById("search").value;
-        document.getElementById("searchResult").innerHTML = '<a target="_blank" href="http://localhost:3000/lookup?email='+email+'">Check Here For Result</a>';
+        document.getElementById("searchResult").innerHTML = '<a target="_blank" href="http://54.206.175.145:3000/lookup?email='+email+'">Check Here For Result</a>';
     }
     //transforming files to backend
     const form = document.querySelector('form');
@@ -73,7 +73,7 @@
 
         // Appends value(s) of file input
         // Post data to Node and Express server:
-        fetch('http://localhost:3000/uploads', {
+        fetch('http://54.206.175.145:3000/uploads', {
             method: 'POST',
             body: formData, // Payload is formData object
         })
@@ -92,7 +92,7 @@
             }
             else{
                 document.getElementById("submitFile").remove();
-                document.getElementById("result").innerHTML='<br> Submitted ! <br> See result at: <br><a href="http://localhost:3000/lookup?email='+email.value+'"" >Result</a>'
+                document.getElementById("result").innerHTML='<br> Submitted ! <br> See result at: <br><a href="http://54.206.175.145:3000/lookup?email='+email.value+'"" >Result</a>'
             }
         });
     })

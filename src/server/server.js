@@ -169,12 +169,12 @@ db.once('open',function(){
                     for(i of e){
                         var result;
                         if(i.Done){
-                            result = '<a target="_blank" href="http://localhost:3000/download?id='+i.id+'&result=true'+'">Result</a>';
+                            result = '<a target="_blank" href="http://54.206.175.145:3000/download?id='+i.id+'&result=true'+'">Result</a>';
                         }
                         else{
                             result = "Processing"
                         }
-                        var indexfile = '<a target="_blank" href="http://localhost:3000/download?id='+i.id+'&result=false'+'">'+i.indexFilename+'</a>';
+                        var indexfile = '<a target="_blank" href="http://54.206.175.145:3000/download?id='+i.id+'&result=false'+'">'+i.indexFilename+'</a>';
                         if(i._uploader.email==Email){
                             body1 += "<tr><td>" +i.indexname +"</td>" + "<td>" +result+"</td>" + "<td>" +indexfile+"</td>" + "<td>" +i.time +"</td></tr>";
                         }
@@ -194,13 +194,13 @@ db.once('open',function(){
         var result = req.query['result'];
         if(result=='true'){
             IndexFile.findOne({id:id}).populate('_uploader').then((e,err)=>{
-                const file = __dirname+'/indexes/'+e._uploader.email+'/'+e.time+'/result.csv';
+                const file = __dirname+'/Indexes/'+e._uploader.email+'/'+e.time+'/result.csv';
                 res.download(file);
             })
         }
         else{
             IndexFile.findOne({id:id}).populate('_uploader').then((e,err)=>{
-                const file = __dirname+'/indexes/'+e._uploader.email+'/'+e.time+'/'+e.indexFilename;
+                const file = __dirname+'/Indexes/'+e._uploader.email+'/'+e.time+'/'+e.indexFilename;
                 res.download(file);
             })
         }

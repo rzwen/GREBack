@@ -158,8 +158,22 @@ db.once('open',function(){
             if(e==null){
                 res.send(head2+tail);
             }else{
-                if(Email=="''"||Email==""){
-                    res.send(head2 + tail);
+                if(Email=="''"||Email==""||Email=='""'){
+                    var bodyHead = "<tbody><tr>";
+                    var bodyTail = "</tr></tbody>";
+                    var body2 = "";
+                    for(i of e){
+                        var result;
+                        if(i.Done){
+                            result = '<a target="_blank" href="http://54.206.175.145:3000/download?id='+i.id+'&result=true'+'">Result</a>';
+                        }
+                        else{
+                            result = "Processing"
+                        }
+                        var indexfile = '<a target="_blank" href="http://54.206.175.145:3000/download?id='+i.id+'&result=false'+'">'+i.indexFilename+'</a>';
+                        body2 += "<tr><td>" +i.indexname +"</td>" + "<td>" +i._uploader.email+"</td>" + "<td>" +result+"</td>" + "<td>" + indexfile +"</td>" + "<td>" +i.time +"</td></tr>";
+                    }
+                    res.send(head2+ bodyHead + body2+bodyTail+tail);
                 }
                 else{
                     var bodyHead = "<tbody><tr>";

@@ -104,7 +104,8 @@ while True:
             myquery = { "_id": i["_id"] }
             newvalues1 = { "$set": { "Done": "false"}} 
             newvalues2 = {"$set": { "result": "output.csv"}}
-            Indexes.update_one(myquery,newvalues)
+            Indexes.update_one(myquery,newvalues1)
+            Indexes.update_one(myquery,newvalues2)
     break
 
     

@@ -36,7 +36,46 @@
 <label for="comFile">Compeditor File</label>
 <input type="File" id="comFile" name="comFile">
 <br>
+<h3>Additional Options</h3>
+<p>Write Ratio
+<select style="color:black" id="writeRatio">
+    <option value="0">0</option>
+    <option value="0.2">0.2</option>
+    <option value="0.5" selected>0.5</option>
+    <option value="0.8">0.8</option>
+    <option value="1">1</option>
+</select>
+</p>
+<p>Thread Number
+    <select style="color:black" id="Thread">
+        <option value="1">1</option>
+        <option value="4">4</option>
+        <option value="8">8</option>
+        <option value="16">16</option>
+        <option value="24" selected>24</option>
+        <option value="32">32</option>
+    </select>
+</p>
+<p>Latency? 
+    <select style="color:black" id="Latency">
+        <option value="None" selected>None</option>
+        <option value="0.0001">0.0001</option>
+        <option value="0.001">0.001</option>
+        <option value="0.01">0.01</option>
+        <option value="0.1">0.1</option>
+        <option value="0.5">0.5</option>
+    </select>
+</p>
+<label for="rangeQuery">Range query? </label>
+<input type="checkbox" id="rangeQuery" name="rangeQuery">
+<label for="range">Range: </label>
+<input type="text" id="range" name="range">
+<br>
+<label for="Zipfian">Zipfian distribution? </label>
+<input type="checkbox" id="Zipfian" name="Zipfian">
+<br>
 <input type="submit" id="submitFile" value="Submit">
+<br>
 <div id="result"></div>
 </form>
 
@@ -60,6 +99,12 @@
         const com = document.getElementById("uploadedCompeditor");
         const indexFile = document.getElementById("indexFile");
         const comFile = document.getElementById("comFile");
+        const writeRatio = document.getElementById("writeRatio");
+        const Thread = document.getElementById("Thread");
+        const Latency = document.getElementById("Latency");
+        const rangeQuery = document.getElementById("rangeQuery");
+        const range = document.getElementById("range");
+        const Zipfian = document.getElementById("Zipfian");
         const formData = new FormData();
         // Creates empty formData object
         formData.append("uploaderEmail", email.value);
@@ -67,9 +112,16 @@
         formData.append("uploadedIndex", index.value);
         formData.append("IndexFileName", IndexFileName.value);
         formData.append("uploadedCompeditor", com.value);
+        formData.append("writeRatio", writeRatio.value);
+        formData.append("Thread", Thread.value);
+        formData.append("Latency", Latency.value);
+        formData.append("rangeQuery", rangeQuery.checked);
+        formData.append("Zipfian", Zipfian.checked);
+        formData.append("range", range.value);
         // Appends value of text input
         formData.append("files", indexFile.files[0]);
         formData.append("files", comFile.files[0]);
+        
 
         // Appends value(s) of file input
         // Post data to Node and Express server:

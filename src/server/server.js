@@ -2,8 +2,10 @@
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
-mongoose.connect('mongodb+srv://stu185:p440465W@cluster0.gbo7pn3.mongodb.net/stu185');
 
+//change to your db account
+//mongoose.connect('mongodb+srv://stu185:p440465W@cluster0.gbo7pn3.mongodb.net/stu185');
+mongoose.connect('mongodb+srv://Winston:Wrz123456@cluster0.pcxsvue.mongodb.net/?retryWrites=true&w=majority');
 const {ApolloServer, gql, UserInputError} = require('apollo-server-express');
 
 const db = mongoose.connection;
@@ -19,11 +21,6 @@ var alert = require('alert');
 
 const storage = multer.diskStorage({
     destination: function (req, file, callback) {
-        // if (!fs.existsSync(__dirname + '/uploads'+req.body["uploaderEmail"])) {
-        //     fs.mkdir(__dirname + '/uploads/'+req.body["uploaderEmail"]);
-        // }
-        // fs.mkdir(__dirname + '/uploads/'+req.body["uploaderEmail"]+'/'+(new Date()).getFullYear()+'_'+((new Date()).getMonth()+1)+'_'+(new Date()).getDate()+'_'+(new Date()).getHours()+'_'+(new Date()).getMinutes());
-        //callback(null, __dirname + '/uploads/'+req.body["uploaderEmail"]+"/"+(new Date()).getFullYear()+'_'+((new Date()).getMonth()+1)+'_'+(new Date()).getDate()+'_'+(new Date()).getHours()+'_'+(new Date()).getMinutes());
         callback(null, __dirname + '/uploads');
     },
     filename: function (req, file, callback) {
@@ -43,7 +40,14 @@ const IndexFileSchema = mongoose.Schema({
     compeditorName:{type:String},
     id:{type:Number},
     time: { type: String },
-    Done: {type: Boolean}
+    result: {type:String},
+    Done: {type: Boolean},
+    writeRatio: {type: String},
+    Thread: {type: String},
+    Latency: {type: String},
+    rangeQuery: {type: Boolean},
+    Zipfian: {type: Boolean},
+    range: {type: String},
 }); 
 
 const TesterSchema = mongoose.Schema({
@@ -106,8 +110,8 @@ db.once('open',function(){
                     before +=1;
                 }
             }
-            Tester.find({email:req.body['uploaderEmail']}).then((e,err)=>{
-                if(err){
+            Tester.findOne({email:email}).then((e,err)=>{
+                if(err||e==null){
                     Tester.create({
                         Id: Number(before),
                         name:req.body['uploaderName'],
@@ -115,7 +119,7 @@ db.once('open',function(){
                         pw: req.body['password'],
                     });
                     alert("Signed up! Go back and send index file");
-                    res.sendFile("PostForm.html");
+                    res.sendFile(__dirname+"/PostForm.html");
                 }
                 else{
                     console.log("This email already signed up!");
@@ -208,7 +212,7 @@ db.once('open',function(){
         var result = req.query['result'];
         if(result=='true'){
             IndexFile.findOne({id:id}).populate('_uploader').then((e,err)=>{
-                const file = __dirname+'/Indexes/'+e._uploader.email+'/'+e.time+'/result.csv';
+                const file = __dirname+'/Indexes/'+e._uploader.email+'/'+e.time+'/'+e.result;
                 res.download(file);
             })
         }
@@ -238,6 +242,7 @@ db.once('open',function(){
 
     app.post('/uploads', uploads.array("files"),(req,res) => {
         res.set('Content-Type','text/plain');
+        console.log(req.body["Latency"]);
         IndexFile.find({}).then((e,err)=>{
             if(err){
                 console.log(err);
@@ -279,8 +284,15 @@ db.once('open',function(){
                                         indexFilename: req.body["IndexFileName"],
                                         id:count,
                                         compeditorName:req.body["uploadedCompeditor"],
+                                        result: "Not Done",
                                         time: (new Date()).getFullYear()+'-'+((new Date()).getMonth()+1)+'-'+(new Date()).getDate()+'_'+(new Date()).getHours()+'-'+(new Date()).getMinutes(),
-                                        Done: false
+                                        Done: false,
+                                        writeRatio: req.body['writeRatio'],
+                                        Thread: req.body['Thread'],
+                                        Latency: req.body['Latency'],
+                                        rangeQuery: req.body['rangeQuery'],
+                                        range: req.body['range'],
+                                        Zipfian: req.body['Zipfian'],
                                     });
                                     res.json({status:"Get the file"});
                                 }

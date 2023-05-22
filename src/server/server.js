@@ -212,14 +212,26 @@ db.once('open',function(){
         var result = req.query['result'];
         if(result=='true'){
             IndexFile.findOne({id:id}).populate('_uploader').then((e,err)=>{
-                const file = __dirname+'/Indexes/'+e._uploader.email+'/'+e.time+'/'+e.result;
-                res.download(file);
+                if(err||e==null){
+                    console.log("Requiring file Wrong");
+                    alert("Requiring file Wrong!");
+                }
+                else{
+                    const file = __dirname+'/Indexes/'+e._uploader.email+'/'+e.time+'/'+e.result;
+                    res.download(file);
+                }
             })
         }
         else{
             IndexFile.findOne({id:id}).populate('_uploader').then((e,err)=>{
-                const file = __dirname+'/Indexes/'+e._uploader.email+'/'+e.time+'/'+e.indexFilename;
-                res.download(file);
+                if(err||e==null){
+                    console.log("Requiring file Wrong");
+                    alert("Requiring file Wrong!");
+                }
+                else{
+                    const file = __dirname+'/Indexes/'+e._uploader.email+'/'+e.time+'/'+e.indexFilename;
+                    res.download(file);
+                }
             })
         }
         
